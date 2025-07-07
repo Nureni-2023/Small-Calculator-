@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scientific Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1a2e;
+      --panel: #16213e;
+      --btn: #0f3460;
+      --btn-hover: #e94560;
+      --text: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: var(--text);
+    }
+
+    .calculator {
+      background-color: var(--panel);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      width: 350px;
+    }
+
+    .display {
+      background-color: #000;
+      color: lime;
+      padding: 1rem;
+      font-size: 1.8rem;
+      text-align: right;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      min-height: 60px;
+      word-wrap: break-word;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+
+    button {
+      padding: 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      background-color: var(--btn);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+    }
+
+    button:hover {
+      background-color: var(--btn-hover);
+    }
+
+    .wide {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display"></div>
+    <div class="buttons">
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="backspace()">DEL</button>
+      <button onclick="append('%')">%</button>
+      <button onclick="append('/')">/</button>
+      <button onclick="append('^')">^</button>
+
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button onclick="append('*')">*</button>
+      <button onclick="append('sqrt(')">√</button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button onclick="append('-')">-</button>
+      <button onclick="append('log(')">log</button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button onclick="append('+')">+</button>
+      <button onclick="append('ln(')">ln</button>
+
+      <button onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button onclick="append('(')">(</button>
+      <button onclick="append(')')">)</button>
+      <button onclick="calculate()">=</button>
+
+      <button onclick="append('sin(')">sin</button>
+      <button onclick="append('cos(')">cos</button>
+      <button onclick="append('tan(')">tan</button>
+      <button onclick="append('pi')">π</button>
+      <button onclick="append('e')">e</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+
+    function append(val) {
+      display.textContent += val;
+    }
+
+    function clearDisplay() {
+      display.textContent = '';
+    }
+
+    function backspace() {
+      display.textContent = display.textContent.slice(0, -1);
+    }
+
+    function calculate() {
+      try {
+        const expr = display.textContent
+          .replace(/\^/g, '**')
+          .replace(/sqrt\(/g, 'Math.sqrt(')
+          .replace(/log\(/g, 'Math.log10(')
+          .replace(/ln\(/g, 'Math.log(')
+          .replace(/sin\(/g, 'Math.sin(')
+          .replace(/cos\(/g, 'Math.cos(')
+          .replace(/tan\(/g, 'Math.tan(')
+          .replace(/pi/g, 'Math.PI')
+          .replace(/e/g, 'Math.E');
+        display.textContent = eval(expr);
+      } catch (err) {
+        display.textContent = 'Error';
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key.match(/[0-9+\-*/().]/)) append(e.key);
+      if (e.key === 'Enter') calculate();
+      if (e.key === 'Backspace') backspace();
+      if (e.key === 'Escape') clearDisplay();
+    });
+  </script>
+</body>
+</html>
